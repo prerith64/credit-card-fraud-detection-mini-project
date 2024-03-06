@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fraud Detection</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+    }
+    .container {
+        text-align: center;
+    }
+    button {
+        padding: 10px 20px;
+        margin: 10px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    #fraudButton {
+        background-color: #ff6347; /* Indian Red */
+        border: none;
+        color: white;
+    }
+    #testDataButton {
+        background-color: #4682b4; /* Steel Blue */
+        border: none;
+        color: white;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <button id="fraudButton">Fraud</button>
+    <button id="testDataButton">Testing Data</button>
+</div>
+
+<script>
+    document.getElementById('fraudButton').addEventListener('click', function() {
+        window.location.href = '/app'; // Redirect to the root URL associated with app.py
+    });
+
+    document.getElementById('testDataButton').addEventListener('click', function() {
+        window.location.href = '/app1'; // Redirect to the URL associated with app1.py
+    });
+</script>
+
+</body>
+</html>

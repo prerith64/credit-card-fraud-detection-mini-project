@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Card Fraud Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5Tcf0tdAOB53f7GkHZhZriXxKL8ABNTw_T0TYjD761OoDwW2KJpUK8rRuNExar-1JKuc&usqp=CAU'); /* Replace 'background-image.jpg' with the path to your image */
+            background-size: cover;
+            background-position: center;
+        }
+        .container {
+            max-width: 500px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* Adding opacity to the background */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="file"] {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        #prediction-result {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Credit Card Fraud Detection</h1>
+        <form id="prediction-form" enctype="multipart/form-data">
+            <label for="file-upload">Upload CSV file:</label><br>
+            <input type="file" id="file-upload" name="file" accept=".csv" required><br><br>
+            <input type="submit" value="Predict">
+        </form>
+        <div id="prediction-result"></div> <!-- Prediction result will be shown here -->
+    </div>
+
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+    
+            // Get file from file input
+            const file = document.getElementById('file-upload').files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+    
+            // Make POST request to Flask server
+            fetch('/predict_csv', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update prediction result on the page
+                document.getElementById('prediction-result').innerText = "Prediction: " + data.results;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('prediction-result').innerText = "Error: " + error.message;
+            });
+        });
+    </script>
+    
+</body>
+</html>

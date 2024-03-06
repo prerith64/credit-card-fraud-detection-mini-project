@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CSV</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 500px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+            margin-bottom: 20px;
+        }
+        .loader {
+            display: none;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            position: relative;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .loader-in-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload CSV File</h1>
+        <form id="upload-form" enctype="multipart/form-data">
+            <input type="file" id="file-upload" name="file" accept=".csv" required><br><br>
+            <input type="submit" id="submit-button" value="Upload and Evaluate">
+            <div class="loader loader-in-button" id="loader"></div>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+    
+            // Show loader
+            document.getElementById('loader').style.display = 'block';
+    
+            // Get file from file input
+            const file = document.getElementById('file-upload').files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+    
+            // Make POST request to Flask server
+            fetch('/app1', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide loader
+                document.getElementById('loader').style.display = 'none';
+    
+                // Update result on the page
+                document.getElementById('result').innerHTML = `
+                    <p>Accuracy: ${data.accuracy.toFixed(2)}</p>
+                    <p>Number of fraudulent cases: ${data.fraudulent_cases}</p>
+                    <p>Number of genuine cases: ${data.genuine_cases}</p>
+                    <p>Ratio of fraudulent cases: ${(data.fraudulent_ratio * 100).toFixed(2)}%</p>
+                    <p>Precision score: ${(data.precision_score * 100).toFixed(2)}%</p>
+                    <p>Test Loss: ${data.test_loss.toFixed(2)}</p>
+                    <p>Test Accuracy: ${data.test_accuracy.toFixed(2)}</p>
+                `;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = "Error: " + error.message;
+                // Hide loader
+                document.getElementById('loader').style.display = 'none';
+            });
+        });
+    </script>
+    
+</body>
+</html>
